@@ -4,6 +4,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 import plotly.express as px
+import plotly.figure_factory as ff
 
 import pandas as pd
 from datetime import date
@@ -119,6 +120,7 @@ app.layout = html.Div([
     Output('total-visit-social-networks-line', 'figure'),
     Output('world-map', 'figure'),
     Output('diveces-pie', 'figure'),
+    Output('hist-time-social-network', 'figure'),
     Input('date-picker-range', 'start_date'),
     Input('date-picker-range', 'end_date'),
     Input('social-networks-dropdown', 'value'),
@@ -262,7 +264,24 @@ def update_figures(start_date_selected, end_date_selected, social_networks_selec
         }
     )
 
-    return total_visit, facebook_visit, instagram_visit, twitter_visit, twitch_visit, total_visit_fig, total_visit_social_network_fig, world_map_fig, devices_pie_fig
+    labels = df["social_network"].unique()
+    # Construimos una lista de arrays con los minutos que se pasa la gente por
+    # red social, el input necesario para distplot
+    data_hist = [
+        sn[1]["minutes"].to_numpy() for sn in
+        (
+            df
+            .loc[(df.social_network.isin(social_networks_selected)) &
+                (df.device.isin(devices_selected)) &
+                (df.datetime >= start_date_selected) &
+                (df.datetime <= end_date_selected)
+            ]
+            .groupby("social_network")
+        )
+    ]
+    hist_time_social_network_fig = ff.create_distplot(data_hist, labels, bin_size=0.2)
+
+    return total_visit, facebook_visit, instagram_visit, twitter_visit, twitch_visit, total_visit_fig, total_visit_social_network_fig, world_map_fig, devices_pie_fig, hist_time_social_network_fig
 
 
 if __name__ == '__main__':
