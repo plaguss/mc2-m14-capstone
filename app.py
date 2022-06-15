@@ -101,12 +101,8 @@ app.layout = html.Div([
             id='diveces-pie'
         )
     ], style={"columnCount": 2}),
-    html.Div(
-        [
-            html.H3("Distribution of time spent per Social Network", style={"textAlign": "center"}),
-            dcc.Graph(id="hist-time-social-network")
-        ]
-    )
+    html.H3("Distribution of time spent per Social Network", style={"textAlign": "center"}),
+    dcc.Graph(id="hist-minutes")
 ])
 
 
@@ -120,7 +116,7 @@ app.layout = html.Div([
     Output('total-visit-social-networks-line', 'figure'),
     Output('world-map', 'figure'),
     Output('diveces-pie', 'figure'),
-    Output('hist-time-social-network', 'figure'),
+    Output('hist-minutes', 'figure'),
     Input('date-picker-range', 'start_date'),
     Input('date-picker-range', 'end_date'),
     Input('social-networks-dropdown', 'value'),
