@@ -75,7 +75,7 @@ app.layout = html.Div([
         ]),
         html.Div([
             html.Img(src="https://upload.wikimedia.org/wikipedia/commons/d/d3/Twitch_Glitch_Logo_Purple.svg",
-                     style={"width": "100px"}),
+                     style={"width": "50px"}),
             html.H2(
                 id='twitch-visit',
             )
@@ -107,6 +107,7 @@ app.layout = html.Div([
     Output('facebook-visit', 'children'),
     Output('instagram-visit', 'children'),
     Output('twitter-visit', 'children'),
+    Output('twitch-visit', 'children'),
     Output('total-visit-line', 'figure'),
     Output('total-visit-social-networks-line', 'figure'),
     Output('world-map', 'figure'),
