@@ -1,3 +1,4 @@
+from click import style
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -98,7 +99,13 @@ app.layout = html.Div([
         dcc.Graph(
             id='diveces-pie'
         )
-    ], style={"columnCount": 2})
+    ], style={"columnCount": 2}),
+    html.Div(
+        [
+            html.H3("Distribution of time spent per Social Network", style={"textAlign": "center"}),
+            dcc.Graph(id="hist-time-social-network")
+        ]
+    )
 ])
 
 
