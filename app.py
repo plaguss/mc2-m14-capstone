@@ -260,7 +260,7 @@ def update_figures(start_date_selected, end_date_selected, social_networks_selec
         }
     )
 
-    labels = df["social_network"].unique()
+    labels = df["social_network"].unique().tolist()
     # Construimos una lista de arrays con los minutos que se pasa la gente por
     # red social, el input necesario para distplot
     data_hist = [
