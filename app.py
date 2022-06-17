@@ -99,10 +99,12 @@ app.layout = html.Div([
         html.H3('Total Visits by Device', style={"textAlign": "center"}),
         dcc.Graph(
             id='diveces-pie'
+        ),
+        html.H3('Sunburst of minutes spent by social network', style={"textAlign": "center"}),
+        dcc.Graph(
+            id='sunburst-minutes'
         )
-    ], style={"columnCount": 2}),
-    html.H3("Distribution of time spent per Social Network", style={"textAlign": "center"}),
-    dcc.Graph(id="hist-minutes")
+    ], style={"columnCount": 3}),
 ])
 
 
@@ -116,7 +118,7 @@ app.layout = html.Div([
     Output('total-visit-social-networks-line', 'figure'),
     Output('world-map', 'figure'),
     Output('diveces-pie', 'figure'),
-    Output('hist-minutes', 'figure'),
+    Output('sunburst-minutes', 'figure'),
     Input('date-picker-range', 'start_date'),
     Input('date-picker-range', 'end_date'),
     Input('social-networks-dropdown', 'value'),
@@ -260,24 +262,18 @@ def update_figures(start_date_selected, end_date_selected, social_networks_selec
         }
     )
 
-    labels = df["social_network"].unique().tolist()
-    # Construimos una lista de arrays con los minutos que se pasa la gente por
-    # red social, el input necesario para distplot
-    data_hist = [
-        sn[1]["minutes"].to_numpy() for sn in
-        (
-            df
-            .loc[(df.social_network.isin(social_networks_selected)) &
-                (df.device.isin(devices_selected)) &
-                (df.datetime >= start_date_selected) &
-                (df.datetime <= end_date_selected)
-            ]
-            .groupby("social_network")
-        )
-    ]
-    hist_time_social_network_fig = ff.create_distplot(data_hist, group_labels=labels, nbins=50, bin_size=0.2)
+    data_hist = (
+        df
+        .loc[(df.social_network.isin(social_networks_selected)) &
+            (df.device.isin(devices_selected)) &
+            (df.datetime >= start_date_selected) &
+            (df.datetime <= end_date_selected)
+        ]
+    )
 
-    return total_visit, facebook_visit, instagram_visit, twitter_visit, twitch_visit, total_visit_fig, total_visit_social_network_fig, world_map_fig, devices_pie_fig, hist_time_social_network_fig
+    sunburst_fig = px.sunburst(data_hist, path=["social_network", "device"], values="minutes")
+    
+    return total_visit, facebook_visit, instagram_visit, twitter_visit, twitch_visit, total_visit_fig, total_visit_social_network_fig, world_map_fig, devices_pie_fig, sunburst_fig
 
 
 if __name__ == '__main__':
